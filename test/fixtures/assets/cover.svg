@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="220" viewBox="0 0 720 220">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#8b8cf9"/>
+      <stop offset="100%" stop-color="#5b5bd6"/>
+    </linearGradient>
+  </defs>
+  <rect width="720" height="220" rx="14" fill="url(#g)"/>
+  <text x="360" y="105" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="34"
+        font-weight="700" fill="#ffffff" text-anchor="middle">MD Reader 封面示例图</text>
+  <text x="360" y="145" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="16"
+        fill="#e8e8ff" text-anchor="middle">这是一张本地 SVG，用于验证相对路径图片解析</text>
+</svg>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MD Reader</title>
+<style>
+/*__CSS__*/
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <header id="topbar">
+    <div class="brand">
+      <span class="logo">M</span>
+      <span>MD Reader</span>
+    </div>
+
+    <button class="tbtn primary" id="btn-open" title="打开文件 (Ctrl+O)">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 4.2A1.2 1.2 0 0 1 3.2 3h2.6l1.2 1.5h5.8A1.2 1.2 0 0 1 14 5.7v6.1a1.2 1.2 0 0 1-1.2 1.2H3.2A1.2 1.2 0 0 1 2 11.8z"/></svg>
+      打开
+    </button>
+    <button class="tbtn" id="btn-folder" title="打开整个文件夹">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 12.5V4.2A1.2 1.2 0 0 1 3.2 3h2.4l1.2 1.5h5.9A1.2 1.2 0 0 1 14 5.7v6.8a1.2 1.2 0 0 1-1.2 1.2H3.2A1.2 1.2 0 0 1 2 12.5z"/><path d="M2 7.6h12"/></svg>
+      文件夹
+    </button>
+    <button class="tbtn" id="btn-edit" title="编辑 / 阅读模式 (Ctrl+E)">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M11.2 2.4 13.6 4.8 5.9 12.5l-3 .8.8-3z"/><path d="M2.5 14h11"/></svg>
+      <span id="edit-label">编辑</span>
+    </button>
+
+    <div class="top-spacer"></div>
+
+    <div id="search-wrap">
+      <svg class="s-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="4.2"/><path d="M10.2 10.2 14 14" stroke-linecap="round"/></svg>
+      <input id="search" type="text" placeholder="查找…  Ctrl+F" spellcheck="false" autocomplete="off">
+      <div class="s-actions">
+        <span class="s-count" id="search-count"></span>
+        <button id="search-prev" title="上一个 (Shift+Enter)">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 10l4-4 4 4"/></svg>
+        </button>
+        <button id="search-next" title="下一个 (Enter)">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 6l4 4 4-4"/></svg>
+        </button>
+        <button id="search-clear" title="清除 (Esc)">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <button class="tbtn icon" id="btn-font-down" title="缩小字号 (Ctrl+-)">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 8h10"/></svg>
+    </button>
+    <button class="tbtn icon" id="btn-font-up" title="放大字号 (Ctrl+=)">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg>
+    </button>
+    <button class="tbtn icon" id="btn-theme" title="切换主题 (Alt+D)">
+      <svg id="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></svg>
+    </button>
+    <button class="tbtn icon on" id="btn-sidebar" title="文件列表 (Ctrl+B)">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2.5 3h11a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M6 3v10"/></svg>
+    </button>
+    <button class="tbtn icon on" id="btn-outline" title="大纲 (Ctrl+Shift+B)">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 4h10M5 8h8M7 12h6"/></svg>
+    </button>
+
+    <div class="menu-wrap">
+      <button class="tbtn icon" id="btn-export" title="导出 / 转换格式">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 2.5v7"/><path d="M5 7l3 3 3-3"/><path d="M2.8 11.5v1.2a1 1 0 0 0 1 1h8.4a1 1 0 0 0 1-1v-1.2"/></svg>
+      </button>
+      <div class="menu" id="export-menu">
+        <button class="menu-item" data-fmt="html"><b>HTML</b><small>.html 独立网页</small></button>
+        <button class="menu-item" data-fmt="docx"><b>Word</b><small>.docx 文档</small></button>
+        <button class="menu-item" data-fmt="txt"><b>纯文本</b><small>.txt 无标记</small></button>
+        <button class="menu-item" data-fmt="print"><b>打印 / PDF</b><small>Ctrl+P</small></button>
+      </div>
+    </div>
+    <button class="tbtn icon" id="btn-palette" title="命令面板 / 搜索文件 (Ctrl+K)">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="4.4"/><path d="M10.3 10.3 14 14"/></svg>
+    </button>
+    <button class="tbtn icon" id="btn-reload" title="重新加载当前文件">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M13.2 8a5.2 5.2 0 1 1-1.6-3.75"/><path d="M13.4 2.6v3.1h-3.1"/></svg>
+    </button>
+    <button class="tbtn icon" id="btn-clear" title="清空文件列表">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.8 4.5h10.4"/><path d="M6.2 4.5V3h3.6v1.5"/><path d="M4.2 4.5l.6 8.2a1 1 0 0 0 1 .9h4.4a1 1 0 0 0 1-.9l.6-8.2"/></svg>
+    </button>
+  </header>
+
+  <div id="progress"></div>
+
+  <main id="main">
+
+    <aside id="sidebar">
+      <div class="panel-head">
+        <span>文件</span>
+        <span class="count" id="file-count">0</span>
+      </div>
+      <div id="filter-wrap">
+        <input id="filter" type="text" placeholder="按文件名过滤…" spellcheck="false" autocomplete="off">
+      </div>
+      <div id="filetree"></div>
+    </aside>
+
+    <section id="content-wrap">
+
+      <div id="editor-pane">
+        <div id="editor-toolbar">
+          <button class="ebtn" data-md="bold" title="加粗"><b>B</b></button>
+          <button class="ebtn" data-md="italic" title="斜体"><i>I</i></button>
+          <button class="ebtn" data-md="strike" title="删除线"><s>S</s></button>
+          <button class="ebtn" data-md="code" title="行内代码">&lt;&gt;</button>
+          <span class="esep"></span>
+          <button class="ebtn" data-md="h1" title="一级标题">H1</button>
+          <button class="ebtn" data-md="h2" title="二级标题">H2</button>
+          <button class="ebtn" data-md="h3" title="三级标题">H3</button>
+          <span class="esep"></span>
+          <button class="ebtn" data-md="ul" title="无序列表">&#8226;</button>
+          <button class="ebtn" data-md="ol" title="有序列表">1.</button>
+          <button class="ebtn" data-md="task" title="任务列表">&#9744;</button>
+          <button class="ebtn" data-md="quote" title="引用">&#10077;</button>
+          <span class="esep"></span>
+          <button class="ebtn" data-md="link" title="链接">link</button>
+          <button class="ebtn" data-md="image" title="图片">img</button>
+          <button class="ebtn" data-md="table" title="表格">table</button>
+          <button class="ebtn" data-md="codeblock" title="代码块">{ }</button>
+          <button class="ebtn" data-md="hr" title="分割线">&#8212;</button>
+          <span class="esep"></span>
+          <button class="ebtn primary" id="editor-save" title="保存 (Ctrl+S)">保存</button>
+          <button class="ebtn" id="editor-close" title="回到阅读模式">退出编辑</button>
+          <span class="ebtn-hint" id="editor-hint"></span>
+        </div>
+        <textarea id="editor" spellcheck="false" placeholder="在这里编辑…"></textarea>
+      </div>
+
+      <div id="empty">
+        <div class="ring">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M6 2.5h7l5 5v14H6z"/><path d="M13 2.5v5h5"/><path d="M9 13h6M9 17h4"/></svg>
+        </div>
+        <h2>把文件或整个文件夹拖进来</h2>
+        <p>
+          支持 <b>Markdown</b>、<b>HTML</b>、<b>CSV</b>、<b>JSON</b>、各类<b>代码</b>与<b>纯文本</b>文件。<br>
+          拖入整个文件夹时，里面所有文档会列在左侧，点一下就能切换，文档里引用的本地图片也会一起显示。
+        </p>
+        <div class="row">
+          <button class="tbtn primary" id="empty-open">选择文件</button>
+          <button class="tbtn" id="empty-folder">选择文件夹</button>
+          <button class="tbtn" id="empty-paste">粘贴 Markdown</button>
+        </div>
+        <p style="font-size:12px;color:var(--text-faint)">
+          还可以 <kbd>Ctrl</kbd>+<kbd>O</kbd> 打开文件、<kbd>Ctrl</kbd>+<kbd>K</kbd> 搜索、<kbd>Ctrl</kbd>+<kbd>E</kbd> 进入编辑模式。<br>
+          想让双击 .md 就直接打开？用仓库里的 <b>open-md.bat</b>。
+        </p>
+      </div>
+
+      <article id="content"></article>
+    </section>
+
+    <aside id="outline">
+      <div class="panel-head">
+        <span>大纲</span>
+        <button class="mini" id="btn-prev" title="上一个文件 (Alt+↑)">▲</button>
+        <button class="mini" id="btn-next" title="下一个文件 (Alt+↓)">▼</button>
+      </div>
+      <div id="outline-list"></div>
+    </aside>
+
+  </main>
+
+  <footer id="statusbar">
+    <span class="st">字数 <b id="stat-chars">—</b></span>
+    <span class="st">行数 <b id="stat-lines">—</b></span>
+    <span class="st">约读 <b id="stat-read">—</b></span>
+    <span class="st">大小 <b id="stat-size">—</b></span>
+    <span class="st">格式 <b id="stat-kind">—</b></span>
+    <span class="grow"></span>
+    <span class="st clickable" id="stat-path" title="">未打开文件</span>
+  </footer>
+
+</div>
+
+<div id="dropzone">
+  <div class="inner">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M12 16V4"/><path d="M7.5 8.5 12 4l4.5 4.5"/><path d="M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/></svg>
+    <span>松手即可导入</span>
+    <small>支持文件或整个文件夹 · Markdown / HTML / CSV / JSON / 代码 / 文本</small>
+  </div>
+</div>
+
+<div id="palette">
+  <div class="box">
+    <input id="palette-input" type="text" placeholder="搜索文件，或输入命令…" spellcheck="false" autocomplete="off">
+    <div class="list" id="palette-list"></div>
+    <div class="hint">
+      <span>↑↓ 选择</span><span>Enter 打开</span><span>Esc 关闭</span>
+    </div>
+  </div>
+</div>
+
+<div id="lightbox"><img id="lightbox-img" alt=""></div>
+<div id="toast"></div>
+<button id="totop" title="回到顶部">
+  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" style="width:16px;height:16px"><path d="M8 12V4"/><path d="M4 8l4-4 4 4"/></svg>
+</button>
+
+<input type="file" id="file-input" multiple style="display:none"
+  accept=".md,.markdown,.mdown,.mkd,.mdtxt,.mdx,.txt,.text,.log,.html,.htm,.csv,.tsv,.json,.jsonc,.xml,.yml,.yaml,.ini,.cfg,.conf,.toml,.env,.properties,.js,.mjs,.cjs,.jsx,.ts,.tsx,.py,.rb,.php,.java,.kt,.c,.h,.cpp,.hpp,.cs,.go,.rs,.swift,.sh,.bash,.ps1,.bat,.cmd,.sql,.r,.lua,.pl,.dart,.scala,.css,.scss,.less,.vue,.svelte,.tex,.diff,.patch,text/*">
+<input type="file" id="dir-input" webkitdirectory directory multiple style="display:none">
+
+<script>
+/*__VENDOR_MARKED__*/
+</script>
+<script>
+/*__VENDOR_PURIFY__*/
+</script>
+<script>
+/*__VENDOR_HLJS__*/
+</script>
+<script>
+/*__DOCX__*/
+</script>
+<script>
+/*__INLINE_CSS__*/
+</script>
+<script>
+/*__APP__*/
+</script>
+</body>
+</html>
